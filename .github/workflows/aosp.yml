@@ -1,4 +1,4 @@
-name: build-kernel {miui-ksu-susfs}
+name: build-kernel {aosp}
 on:
   workflow_dispatch:
 jobs:
@@ -34,8 +34,8 @@ jobs:
       run: |
            export ARCH=arm64
            export PATH="${PWD}/clang/bin:${PWD}gcc64/bin:${PWD}gcc32/bin:${PATH}"
-           export KBUILD_BUILD_USER=Builder
-           export KBUILD_BUILD_HOST=Clrowex
+           export KBUILD_BUILD_USER=nobody
+           export KBUILD_BUILD_HOST=android-build
            export LLVM=1
            export LLVM_IAS=1
            export CROSS_COMPILE=aarch64-linux-gnu-
@@ -54,15 +54,14 @@ jobs:
       
     - name: clone Anykernel3 & Priper Image
       run: |
-            git clone --depth=1 https://github.com/Taufik-Daulay/AnyKernel3.git -b main AnyKernel3  
-            cp out/arch/arm64/boot/Image.gz AnyKernel3/Image.gz
+            git clone --depth=1 https://github.com/clrowex/Anykernel3 -b main AnyKernel3  
+            cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3/Image.gz-dtb
             cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
-            cp out/arch/arm64/boot/dtb.img AnyKernel3/dtb.img
-               
+            
     - name: Upload Kernel Image 
       uses: actions/upload-artifact@v4
       with:
-        name: sweet-kernel-miui-${{ env.BUILD_TIME }}
+        name: sweet-kernel-aosp-${{ env.BUILD_TIME }}
         path: AnyKernel3/*
 
 
