@@ -1,4 +1,4 @@
-name: build-kernel {miui}
+name: build-kernel {oos-port}
 on:
   workflow_dispatch:
 jobs:
@@ -61,7 +61,7 @@ jobs:
     - name: Upload Kernel Image 
       uses: actions/upload-artifact@v4
       with:
-        name: sweet-kernel-miui-${{ env.BUILD_TIME }}
+        name: sweet-kernel-oos-port-${{ env.BUILD_TIME }}
         path: AnyKernel3/*
 
 
