@@ -1,4 +1,4 @@
-name: build-kernel {miui-ksu-susfs}
+name: build-kernel [MIUI]
 on:
   workflow_dispatch:
 jobs:
@@ -10,7 +10,7 @@ jobs:
       
     - name: Prepare timezone 
       run: |
-            echo "BUILD_TIME=$(TZ=Asia/Jakarta date "+%d-%m-%Y-%H%M")" >> $GITHUB_ENV
+            echo "BUILD_TIME=$(TZ=Asia/Jakarta date "+%d%m%Y-%H%M")" >> $GITHUB_ENV
             sudo rm /etc/localtime
             sudo ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
         
@@ -26,7 +26,7 @@ jobs:
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 gcc32
             
-    - name: clone KernelSU Next SuSFS
+    - name: clone KernelSU-Next 
       run: |
            curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/next/kernel/setup.sh" | bash -s next-susfs-dev
                               
@@ -34,16 +34,11 @@ jobs:
       run: |
            export ARCH=arm64
            export PATH="${PWD}/clang/bin:${PWD}gcc64/bin:${PWD}gcc32/bin:${PATH}"
-           export KBUILD_BUILD_USER=Builder
-           export KBUILD_BUILD_HOST=Clrowex
-           export LLVM=1
-           export LLVM_IAS=1
-           export CROSS_COMPILE=aarch64-linux-gnu-
-           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-           export CLANG_TRIPLE=aarch64-linux-gnu-
-           export KBUILD_COMPILER_STRING="$(clang --version | head -n 1)"
+           export KBUILD_BUILD_USER=nobody
+           export KBUILD_BUILD_HOST=android-build 
+           export KBUILD_COMPILER_STRING="${PWD}/clang"
            make O=out sweet_defconfig 
-           make -j$(nproc --all) O=out \ ARCH=arm64 CC=clang
+           make -j$(nproc --all) O=out \ ARCH=arm64 \ LLVM=1 \ LLVM_IAS=1 \ CC=clang \ CLANG_TRIPLE=aarch64-linux-gnu- \ CROSS_COMPILE=aarch64-linux-gnu- \ CROSS_COMPILE_ARM32=arm-linux-gnueabi-
            mv out/.config out/sweet_defconfig.txt
            
     - name: Upload defconfig 
@@ -52,17 +47,17 @@ jobs:
         name: defconfig-${{ env.BUILD_TIME }}
         path: out/sweet_defconfig.txt
       
-    - name: clone Anykernel3 & Priper Image
+    - name: Priper Image
       run: |
-            git clone --depth=1 https://github.com/Taufik-Daulay/AnyKernel3.git -b main AnyKernel3  
+            git clone --depth=1 https://github.com/clrowex/Anykernel3 -b main AnyKernel3 
             cp out/arch/arm64/boot/Image.gz AnyKernel3/Image.gz
             cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
             cp out/arch/arm64/boot/dtb.img AnyKernel3/dtb.img
                
-    - name: Upload Kernel Image 
+    - name: Upload Kernel
       uses: actions/upload-artifact@v4
       with:
-        name: sweet-kernel-miui-${{ env.BUILD_TIME }}
+        name: sweet-MIUI-${{ env.BUILD_TIME }}
         path: AnyKernel3/*
 
 
