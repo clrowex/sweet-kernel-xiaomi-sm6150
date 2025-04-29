@@ -22,8 +22,7 @@ jobs:
                 
     - name: clone Zyc clang 20.0.0git
       run: |
-            wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz" mkdir clang ; cd clang ; tar -xvf zyc-clang.tar.gz -C clang && rm -rf zyc-clang.tar.gz
-   
+            wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz" mkdir clang ; cd clang ; tar -xf * && ls
     - name: clone GCC arm64 & arm32
       run: |
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
