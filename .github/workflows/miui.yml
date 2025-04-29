@@ -22,7 +22,7 @@ jobs:
                 
     - name: clone Zyc clang 20.0.0git
       run: |
-            wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz" mkdir clang && tar -xvf zyc-clang.tar.gz -C clang && rm -rf zyc-clang.tar.gz
+            mkdir clang ; cd clang ; wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz" tar -xvf zyc-clang.tar.gz -C clang && rm -rf zyc-clang.tar.gz
    
     - name: clone GCC arm64 & arm32
       run: |
