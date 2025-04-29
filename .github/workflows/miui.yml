@@ -20,9 +20,10 @@ jobs:
            sudo apt install bc cpio flex bison aptitude git python-is-python3 tar perl wget curl lz4 -y
            sudo aptitude install libssl-dev -y
                 
-    - name: clone Zyc clang 20.0.0git
+    - name: clone Zyc clang 21.0.0git
       run: |
-            wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz" mkdir clang ; cd clang ; tar -xf * && ls
+            mkdir clang && cd clang && curl -LO https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt && zyc-clang.tar.gz && tar -xvf zyc-clang.tar.gz -C clang && rm -rf zyc-clang.tar.gz
+
     - name: clone GCC arm64 & arm32
       run: |
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
